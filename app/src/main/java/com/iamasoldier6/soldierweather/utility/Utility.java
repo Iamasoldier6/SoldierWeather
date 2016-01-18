@@ -23,8 +23,15 @@ import java.util.List;
  * Created by Iamasoldier6 on 1/15/16.
  */
 public class Utility {
+
     private static SoldierWeatherDB soldierWeatherDB;
 
+    /**
+     * 解析和处理服务器返回的数据
+     * @param soldierWeatherDb
+     * @param in
+     * @return
+     */
     public static boolean handleResponse(SoldierWeatherDB soldierWeatherDb, InputStream in) {
         LogUtil.log("Utility", "handleResponse", LogUtil.DEBUG);
         soldierWeatherDB = soldierWeatherDb;
@@ -51,6 +58,11 @@ public class Utility {
         return false;
     }
 
+    /**
+     * 保存到数据库
+     * @param reader
+     * @return
+     */
     private static boolean saveAreaToDatabase(JsonReader reader) {
         LogUtil.log("Utility", "saveAreaToDatabase", LogUtil.NOTHING);
         String provinceName = null;
@@ -94,7 +106,7 @@ public class Utility {
                     }
                 }
                 reader.endObject();
-                LogUtil.log("Utility", /*"id = " + id + */"\nprovince_name = " + provinceName +
+                LogUtil.log("Utility", "\nprovince_name = " + provinceName +
                         "\ncity_name = " + cityName + "\ndistrict_name = " + districtName, LogUtil.NOTHING);
 
                 if (changedProvince) {
@@ -140,6 +152,12 @@ public class Utility {
         return false;
     }
 
+    /**
+     * 处理天气相应
+     * @param context
+     * @param in
+     * @return
+     */
     public static boolean handleWeatherResponse(Context context, InputStream in) {
         LogUtil.log("Utility", "handleWeatherResponse", LogUtil.NOTHING);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -157,6 +175,12 @@ public class Utility {
         return false;
     }
 
+    /**
+     * 解析天气信息
+     * @param context
+     * @param data
+     * @return
+     */
     private static boolean parseWeatherInfo(Context context, String data) {
         LogUtil.log("Utility", "parseWeatherInfo", LogUtil.NOTHING);
         try {
@@ -180,6 +204,15 @@ public class Utility {
         return false;
     }
 
+    /**
+     * 保存天气信息
+     * @param context
+     * @param cityName
+     * @param weather
+     * @param temperature
+     * @param date
+     * @return
+     */
     private static boolean saveWeatherInfo(Context context, String cityName, String weather,
                                            String temperature, String date) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -192,4 +225,3 @@ public class Utility {
         return false;
     }
 }
-

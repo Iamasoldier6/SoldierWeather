@@ -22,10 +22,12 @@ public class HttpUtil {
                     connection.setReadTimeout(8000);
                     InputStream in = connection.getInputStream();
                     if (listener != null) {
+                        //回调onFinish()方法
                         listener.onFinish(in);
                     }
                 } catch (Exception e) {
                     if (listener != null) {
+                        //回调onError()方法
                         listener.onError(e);
                     }
                 } finally {

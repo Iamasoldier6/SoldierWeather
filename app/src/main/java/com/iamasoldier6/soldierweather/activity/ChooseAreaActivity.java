@@ -31,6 +31,7 @@ import java.util.List;
  * Created by Iamasoldier6 on 1/15/16.
  */
 public class ChooseAreaActivity extends Activity {
+
     private static final int LEVEL_PROVINCE = 0;
     private static final int LEVEL_CITY = 1;
     private static final int LEVEL_DISTRICT = 2;
@@ -41,16 +42,33 @@ public class ChooseAreaActivity extends Activity {
     private List<String> lists;
     private ArrayAdapter<String> adapter;
     private SoldierWeatherDB soldierWeatherDB;
-
+    /**
+     * 省列表
+     */
     private List<Province> provinceList;
+    /**
+     * 市列表
+     */
     private List<City> cityList;
+    /**
+     * 县列表
+     */
     private List<District> districtList;
-
+    /**
+     * 选中的省份
+     */
     private Province selectedProvince;
+    /**
+     * 选中的城市
+     */
     private City selectedCity;
-
+    /**
+     * 当前选中的级别
+     */
     private int currentLevel;
-
+    /**
+     * 是否从WeatherActivity中跳转过来
+     */
     private boolean isFromWeatherActivity;
 
     @Override
@@ -58,6 +76,7 @@ public class ChooseAreaActivity extends Activity {
         super.onCreate(savedInstanceState);
         isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //已经选择了城市且不是从WeatherActivity跳转过来,才会直接跳转到WeatherActivity
         if (preferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
             Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
@@ -91,9 +110,12 @@ public class ChooseAreaActivity extends Activity {
                 }
             }
         });
-        queryProvinces();
+        queryProvinces(); //加载省级数据
     }
 
+    /**
+     * 查询全国所有的省,优先从数据库查询,如果没有查询到再去服务器上查询
+     */
     private void queryProvinces() {
         provinceList = soldierWeatherDB.loadProvinces();
         if (provinceList.size() > 0) {
@@ -110,6 +132,9 @@ public class ChooseAreaActivity extends Activity {
         }
     }
 
+    /**
+     * 查询选中省内所有的市,优先从数据库查询,如果没有查询到再去服务器查询
+     */
     private void queryCities() {
         cityList = soldierWeatherDB.loadCities(selectedProvince.getId());
         if (cityList.size() > 0) {
@@ -126,6 +151,9 @@ public class ChooseAreaActivity extends Activity {
         }
     }
 
+    /**
+     * 查询选中市内所有的县,优先从数据库查询,如果没有查询到再去服务器查询
+     */
     private void queryDistricts() {
         districtList = soldierWeatherDB.loadDistricts(selectedCity.getId());
         if (districtList.size() > 0) {
@@ -142,6 +170,11 @@ public class ChooseAreaActivity extends Activity {
         }
     }
 
+    /**
+     * 根据传入的类型从服务器上查询省市县数据
+     *
+     * @param type
+     */
     private void queryFromServer(final String type) {
         showProgressDialog();
         HttpUtil.sendHttpRequest("http://v.juhe.cn/weather/citys?key=af2af1996d54696346d66504710ddcf5", new HttpCallbackListener() {
@@ -149,6 +182,7 @@ public class ChooseAreaActivity extends Activity {
             public void onFinish(InputStream in) {
                 boolean result = Utility.handleResponse(SoldierWeatherDB.getInstance(MyApplication.getContext()), in);
                 if (result) {
+                    //通过runOnUiThread()方法回到主线程处理逻辑
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -178,6 +212,9 @@ public class ChooseAreaActivity extends Activity {
         });
     }
 
+    /**
+     * 显示进度对话框
+     */
     private void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
@@ -187,12 +224,18 @@ public class ChooseAreaActivity extends Activity {
         progressDialog.show();
     }
 
+    /**
+     * 关闭进度对话框
+     */
     private void closeProgressDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
+    /**
+     * 捕获Back按键,根据当前的级别来判断,此时应该返回市列表,省列表,还是直接退出
+     */
     @Override
     public void onBackPressed() {
         if (currentLevel == LEVEL_DISTRICT) {
@@ -208,4 +251,3 @@ public class ChooseAreaActivity extends Activity {
         }
     }
 }
-

@@ -23,6 +23,7 @@ import java.net.URLEncoder;
  * Created by Iamasoldier6 on 1/15/16.
  */
 public class AutoUpdateService extends Service {
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -38,7 +39,7 @@ public class AutoUpdateService extends Service {
             }
         }).start();
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int threeHour = 3 * 60 * 60 * 1000;
+        int threeHour = 3 * 60 * 60 * 1000; //这是3小时的毫秒数
         long triggerAtTime = SystemClock.elapsedRealtime() + threeHour;
         Intent intent1 = new Intent(this, AutoUpdateReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent1, 0);
@@ -46,9 +47,12 @@ public class AutoUpdateService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * 更新天气信息
+     */
     private void updateWeather() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = preferences.getString("district_name", "");
+        String name = preferences.getString("county_name", "");
         try {
             String address = "http://v.juhe.cn/weather/index?format=2&cityname=" + URLEncoder.encode(name, "UTF-8") +
                     "&key=af2af1996d54696346d66504710ddcf5";

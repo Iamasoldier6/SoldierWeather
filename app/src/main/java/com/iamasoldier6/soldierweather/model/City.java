@@ -12,24 +12,24 @@ public class City {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getCityName() {
         return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public int getProvinceId() {
         return provinceId;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setCityName(String name) {
-        cityName = name;
-    }
-
-    public void setProvinceId(int id) {
-        provinceId = id;
+    public void setProvinceId(int provinceId) {
+        this.provinceId = provinceId;
     }
 }
 

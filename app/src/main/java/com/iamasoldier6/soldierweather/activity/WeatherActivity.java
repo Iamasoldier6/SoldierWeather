@@ -26,11 +26,29 @@ import java.net.URLEncoder;
  */
 public class WeatherActivity extends Activity implements View.OnClickListener {
 
+    /**
+     * 用于显示城市名
+     */
     private TextView cityNameText;
+    /**
+     * 用于显示天气描述信息
+     */
     private TextView weatherDespText;
+    /**
+     * 用于显示气温
+     */
     private TextView temperature;
-    private TextView currentDate;
+    /**
+     * 用于显示当前日期
+     */
+    private TextView currentDateText;
+    /**
+     * 切换城市按钮
+     */
     private Button switchCity;
+    /**
+     * 更新天气按钮
+     */
     private Button refreshWeather;
 
     @Override
@@ -39,10 +57,11 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.weather_layout);
 
+        //初始化各控件
         cityNameText = (TextView) findViewById(R.id.city_name);
         weatherDespText = (TextView) findViewById(R.id.weather_desp);
         temperature = (TextView) findViewById(R.id.temperature);
-        currentDate = (TextView) findViewById(R.id.current_date);
+        currentDateText = (TextView) findViewById(R.id.current_date);
         switchCity = (Button) findViewById(R.id.switch_city);
         refreshWeather = (Button) findViewById(R.id.refresh_weather);
 
@@ -51,13 +70,16 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         String districtName = getIntent().getStringExtra("district_name");
         LogUtil.log("WeatherActivity", "districtName = " + districtName, LogUtil.NOTHING);
         if (!TextUtils.isEmpty(districtName)) {
+            //有县级代号时就去查询天气
             weatherDespText.setText("同步中...");
             queryWeather(districtName);
         } else {
+            //没有县级代号时就直接显示本地天气
             showWeather();
         }
     }
 
+    //查询天气
     private void queryWeather(String name) {
         try {
             String address = "http://v.juhe.cn/weather/index?format=2&cityname=" + URLEncoder.encode(name, "UTF-8") +
@@ -89,6 +111,9 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 从SharedPreferences文件中读取存储的天气信息,并显示到界面上
+     */
     private void showWeather() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         LogUtil.log("WeatherActivity", "cityName = " + prefs.getString("city_name", ""));
@@ -98,7 +123,7 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         cityNameText.setText(prefs.getString("city_name", ""));
         weatherDespText.setText(prefs.getString("weather", ""));
         temperature.setText(prefs.getString("temperature", ""));
-        currentDate.setText(prefs.getString("date", ""));
+        currentDateText.setText(prefs.getString("date", ""));
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
     }
@@ -123,4 +148,3 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         }
     }
 }
-

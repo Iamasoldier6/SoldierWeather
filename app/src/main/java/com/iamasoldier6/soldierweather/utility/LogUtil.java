@@ -6,6 +6,7 @@ import android.util.Log;
  * Created by Iamasoldier6 on 1/15/16.
  */
 public class LogUtil {
+
     public static final int VERBOSE = 1;
     public static final int DEBUG = 2;
     public static final int INFO = 3;
@@ -44,4 +45,3 @@ public class LogUtil {
         log(tag, msg, DEBUG);
     }
 }
-

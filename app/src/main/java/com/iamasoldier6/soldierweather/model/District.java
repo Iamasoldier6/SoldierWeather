@@ -12,24 +12,24 @@ public class District {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getDistrictName() {
         return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
     }
 
     public int getCityId() {
         return cityId;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setDistrictName(String name) {
-        districtName = name;
-    }
-
-    public void setCityId(int id) {
-        cityId = id;
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 }
 
