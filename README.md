@@ -22,6 +22,6 @@
 ####时间长了，之前我申请的AppKey可能使用失效，应用没法正常使用，就得用重新申请的AppKey了，具体参见我的博客。
 
 #三.我的博客地址
-<http://www.cnblogs.com/Iamasoldier6/>.
+[学习《第一行代码》之实战项目－搜杰天气](http://www.cnblogs.com/Iamasoldier6/).
 
 Welcom!
